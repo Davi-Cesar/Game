@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="game.html" id="form">
+        <div class="container">
+            <div class="content">
+                
+                <select name="select_room" id="select_room">
+                    <option value="-1">Selecione a sala</option>
+                    <option value="Sala 1">Sala 1</option>
+                    <option value="Sala 2">Sala 2</option>
+                    <option value="Sala 3">Sala 3</option>
+                    <option value="Sala 4">Sala 4</option>
+                </select>
+                        
+                </form>
+                <div class="container-name">
+                    <label class="form-label">Digite seu nome:</label>
+                    <input type="text" name="username" id="field-name" placeholder="name" required/>
+                </div>
+                
+                <div class="container-email">
+                    <label class="form-label">Digite seu E-mail:</label>
+                    <input type="email" name="email" id="field-email" placeholder="E-mail" required/>
+                </div>
+                
+                <div class="container-senha">
+                    <label class="form-label">Digite seu senha:</label>
+                    <input type="password" name="password" id="field-password" placeholder="password" required/>
+                </div>
+                
+                <div class="container-submit">
+                    <button type="" class="btn-submit" id="btn-submit">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+    <script src="auth.js"></script>
+</html>

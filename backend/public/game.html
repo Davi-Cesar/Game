@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form >
+        <div class="container">
+            <div class="content">
+                <button type="button" id="run_back">voltar</button>
+                <div id="name_room">
+                    
+                </div>
+
+                <div class="messages" id="messages">
+                    <div class="new_message">
+                        <label class="form_label">
+                        
+                        </label>
+                    </div>
+                </div>
+
+                <input type="text" placeholder="Digite sua mensagem" id="message_input" />
+                
+            </div>
+        </div>
+    </form>
+</body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+    <script src="client.js"></script>
+</html>
