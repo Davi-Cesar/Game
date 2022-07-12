@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { GameMatch } from "./pages/GameMatch";
 import { Lobby } from "./pages/Lobby";
 
 const App = () => {
@@ -7,6 +8,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Lobby />} />
+            <Route path="/game-match" element={<GameMatch />} />
           </Routes>
         </BrowserRouter>
     </>
