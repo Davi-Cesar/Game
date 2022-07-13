@@ -12,9 +12,9 @@ io.on('connection', (client) => {
         clients.find(user => user.client_id === client.id ? console.log("Client desconnected " + `${client.id}`) : "");
     });
 
-    client.on("select_room", (data) => {
-        //client.join(data.room);
-        console.log(data)
+    client.on("select_room", (data, callback) => {
+        client.join(data.room);
+        console.log("User: " + data.username +" join " + data.room)
         // Verificar se o usuario ja esta na sala
         let alert: boolean = false;
         const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.room === data.room);
@@ -30,10 +30,14 @@ io.on('connection', (client) => {
             email: data.email,
             client_id: client.id,
         }));
+
         
-        const messagesRoom = getMessagesRoom(data.room);
-        //callback(messagesRoom);
+        // const messagesRoom = getMessagesRoom(data.room);
+        // callback(messagesRoom);
     });
+
+    
+    io.emit("list_players", clients);
 
     client.on("message", data => {
         const message: Message = {
@@ -43,10 +47,11 @@ io.on('connection', (client) => {
         }
 
         messages.push(message)
-
+        console.log(message)
         io.to(data.room).emit("message", message);
         
     });
+    
 });
 
 
