@@ -1,19 +1,15 @@
 import * as S from './styles';
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import io, { Socket } from "socket.io-client";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
-
-const PORT = "http://localhost:8800";
-
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-socket = io(PORT);
+import { SocketContext } from '../../services/socket';
 
 export const Lobby = () => {
   const [room, setRoom] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const socket = useContext(SocketContext);
 
   function connectRoom() {
     console.log("aqui");
