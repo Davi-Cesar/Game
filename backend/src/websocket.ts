@@ -12,9 +12,10 @@ io.on('connection', (client) => {
         clients.find(user => user.client_id === client.id ? console.log("Client desconnected " + `${client.id}`) : "");
     });
 
-    client.on("select_room", (data) => {
-        //client.join(data.room);
-        console.log(data)
+    client.on("select_room", (data, callback) => {
+        // client.join(data.room);
+        // console.log("User: " + data.username +" join " + data.room)
+        console.log("Users: " + data.username)
         // Verificar se o usuario ja esta na sala
         let alert: boolean = false;
         const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.room === data.room);
@@ -31,27 +32,34 @@ io.on('connection', (client) => {
             client_id: client.id,
         }));
         
-        const messagesRoom = getMessagesRoom(data.room);
-        //callback(messagesRoom);
+        
+        // const messagesRoom = getMessagesRoom(data.room);
+        // callback(messagesRoom);
+        client.emit('username', data.username)
     });
-
     client.on("message", data => {
         const message: Message = {
-            room: data.room,
             username: data.username,
             text: data.text,
         }
-
+        
         messages.push(message)
-
-        io.to(data.room).emit("message", message);
+        console.log(message)
+        io.emit("message", message);
         
     });
+
+    
+    io.emit("list_players", clients);
+    
+  
+
+    
 });
 
 
-function getMessagesRoom(room: string) {
-    const messagesRoom = messages.filter(message => message.room === room);
+// function getMessagesRoom(room: string) {
+//     const messagesRoom = messages.filter(message => message.room === room);
 
-    return messagesRoom;
-}
+//     return messagesRoom;
+// }

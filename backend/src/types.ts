@@ -8,13 +8,14 @@ export interface RoomClient {
 export interface Message {
     text: string,
     username: string,
-    room: string
 }
 
 export interface ServerToClientEvents {
     // Emit
     message: (data: Message) => void;
     alert: (data: boolean) => void;
+    username: (data: string) => void;
+    list_players: (data: RoomClient[]) => void;
 }
   
 export interface ClientToServerEvents {
@@ -22,6 +23,7 @@ export interface ClientToServerEvents {
     hello: () => void;
     message: (data: Message) => void;
     select_room: (data: RoomClient, callback: (e: Message[]) => void) => void;
+    list_players: (data: RoomClient) => void;
 }
   
 export interface InterServerEvents {
