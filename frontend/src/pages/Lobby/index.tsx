@@ -1,12 +1,7 @@
-import { useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
-import * as S from "./styles";
+import * as S from './styles';
+import { useContext, useEffect, useState } from "react";
 
-const PORT = "http://localhost:8800";
-
-let socket: Socket;
-
-socket = io(PORT);
+import { SocketContext } from '../../services/socket';
 
 interface Message {
   text: string;
@@ -15,6 +10,8 @@ interface Message {
 }
 
 export default function Lobby() {
+  const socket = useContext(SocketContext);
+  
   const [room, setRoom] = useState("");
   // const [username, setUsername] = useState("");
   const urlSearch = new URLSearchParams(window.location.search);

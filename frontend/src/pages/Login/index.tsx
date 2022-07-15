@@ -1,15 +1,8 @@
-import io, { Socket } from "socket.io-client";
-import { useEffect, useState } from "react";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { Link } from "react-router-dom";
-
 import * as S from "./styles";
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 
-const PORT = "http://localhost:8800";
-
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-
-socket = io(PORT);
+import { SocketContext } from "../../services/socket";
 
 interface Message {
   text: string;
@@ -18,6 +11,10 @@ interface Message {
 }
 
 export default function Login() {
+  const socket = useContext(SocketContext);
+
+  let navigate = useNavigate()
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,11 +35,13 @@ export default function Login() {
     socket.on("list_players", (clients) => {
       console.log("Clients: " + [clients]);
     });
+
+    navigate('/lobby')
   }
 
   return (
     <>
-      <form action="/lobby">
+      <form>
         <input
           type="text"
           name="username"
