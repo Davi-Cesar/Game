@@ -4,12 +4,6 @@ import { useContext, useState } from "react";
 
 import { SocketContext } from "../../services/socket";
 
-interface Message {
-  text: string;
-  username: string;
-  room: string;
-}
-
 export default function Login() {
   const socket = useContext(SocketContext);
 
@@ -23,15 +17,16 @@ export default function Login() {
     socket.emit(
       "select_room",
       {
-        // room,
-        email,
+        client_id: socket.id,
         username,
+        email,
         password,
       }
       // (message: string[]) => {
       //   setMessages(message);
       // }
     );
+    
     socket.on("list_players", (clients) => {
       console.log("Clients: " + [clients]);
     });

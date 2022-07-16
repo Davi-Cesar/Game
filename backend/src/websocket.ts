@@ -1,7 +1,6 @@
 import { io } from './https';
 import { Message, RoomClient } from './types';
 
-
 const clients: RoomClient[] = []
 const messages: Message[] = []
 
@@ -16,9 +15,12 @@ io.on('connection', (client) => {
         // client.join(data.room);
         // console.log("User: " + data.username +" join " + data.room)
         console.log("Users: " + data.username)
+
+        //client.join(data.room);
+        console.log(data)
         // Verificar se o usuario ja esta na sala
         let alert: boolean = false;
-        const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.room === data.room);
+        const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.client_id === data.client_id);
         
         const username: any = clients.find(user => user.username === data.username ? client.emit('alert', alert = true ) : client.emit('alert', alert));
         const useremail: any = clients.find(user => user.email === data.email ? client.emit('alert', alert = true ) : client.emit('alert', alert));
@@ -26,11 +28,19 @@ io.on('connection', (client) => {
         userInRoom ? (userInRoom.client_id = client.id)
         : 
         (clients.push({
-            room: data.room,
+            client_id: data.client_id,
             username: data.username,
             email: data.email,
-            client_id: client.id,
+            password: client.id,
         }));
+
+        console.log(clients)
+
+        // if (userInRoom) {
+        //     client.join('room1')
+
+        //     console.log(client.rooms);
+        // }
         
         
         // const messagesRoom = getMessagesRoom(data.room);
@@ -52,7 +62,9 @@ io.on('connection', (client) => {
     
     io.emit("list_players", clients);
     
-  
+    client.on("gameMove", data => {
+        client.broadcast.emit('gameMove', data)        
+    });
 
     
 });

@@ -2,12 +2,7 @@ import * as S from './styles';
 import { useContext, useEffect, useState } from "react";
 
 import { SocketContext } from '../../services/socket';
-
-interface Message {
-  text: string;
-  username: string;
-  room: string;
-}
+import { Message } from '../../types/Socket';
 
 export default function Lobby() {
   const socket = useContext(SocketContext);
@@ -15,7 +10,7 @@ export default function Lobby() {
   const [room, setRoom] = useState("");
   // const [username, setUsername] = useState("");
   const urlSearch = new URLSearchParams(window.location.search);
-  const username = urlSearch.get("username");
+  const username = urlSearch.get("username") as string | '';
 
   const [messagesList, setMessagesList] = useState<Message[]>([]);
 
