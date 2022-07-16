@@ -13,9 +13,14 @@ export interface Message {
 }
 
 export interface GameMove {
-    player: string,
+    playerId: string,
+    side: CharacterSides,
     xAxis: number,
     yAxis: number
+}
+
+export interface Hit {
+    damage: number
 }
 
 export interface ServerToClientEvents {
@@ -25,6 +30,7 @@ export interface ServerToClientEvents {
     username: (data: string) => void;
     list_players: (data: RoomClient[]) => void;
     gameMove: (data: GameMove) => void;
+    hit: (data: Hit) => void;
 }
   
 export interface ClientToServerEvents {
@@ -34,6 +40,7 @@ export interface ClientToServerEvents {
     select_room: (data: RoomClient, callback: (e: Message[]) => void) => void;
     list_players: (data: RoomClient) => void;
     gameMove: (data: GameMove) => void;
+    hit: (data: Hit) => void;
 }
   
 export interface InterServerEvents {

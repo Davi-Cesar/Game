@@ -47,6 +47,7 @@ io.on('connection', (client) => {
         // callback(messagesRoom);
         client.emit('username', data.username)
     });
+    
     client.on("message", data => {
         const message: Message = {
             username: data.username,
@@ -58,7 +59,6 @@ io.on('connection', (client) => {
         io.emit("message", message);
         
     });
-
     
     io.emit("list_players", clients);
     
@@ -66,7 +66,9 @@ io.on('connection', (client) => {
         client.broadcast.emit('gameMove', data)        
     });
 
-    
+    client.on("hit", data => {
+        client.broadcast.emit('hit', data)        
+    });
 });
 
 
