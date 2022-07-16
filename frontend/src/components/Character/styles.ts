@@ -19,3 +19,11 @@ export const NameBox = styled.div`
     text-align: center;
     margin-top: -20px;
 `;
+
+export const WeaponIcon = styled.img`
+    width: 12px;
+    height: 12px;
+
+    position: absolute;
+    margin: -0.1rem 0rem 0rem 1.8rem;
+`;

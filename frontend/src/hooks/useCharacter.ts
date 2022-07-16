@@ -41,7 +41,7 @@ export const useCharacter = (playerName: string, xAxis: number, yAxis: number) =
 
     const canMove = (x: number, y: number, side: CharacterSides) => {
         if(mapSpots[y] !== undefined && mapSpots[y][x] !== undefined) {
-            if (mapSpots[y][x] === 1) {
+            if (mapSpots[y][x] !== 0) {
                 socket.emit("gameMove", {
                     playerId: name,
                     side: side,
