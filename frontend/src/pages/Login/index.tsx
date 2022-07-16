@@ -1,13 +1,16 @@
+import io, { Socket } from "socket.io-client";
+import { useContext, useEffect, useState } from "react";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { Link, useNavigate } from "react-router-dom";
+
 import * as S from "./styles";
-import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
 
 import { SocketContext } from "../../services/socket";
 
 export default function Login() {
   const socket = useContext(SocketContext);
 
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -26,12 +29,8 @@ export default function Login() {
       //   setMessages(message);
       // }
     );
-    
-    socket.on("list_players", (clients) => {
-      console.log("Clients: " + [clients]);
-    });
 
-    navigate('/lobby')
+    navigate("/lobby?username=" + username);
   }
 
   return (

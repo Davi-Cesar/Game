@@ -1,27 +1,28 @@
-import * as S from './styles';
+import * as S from "./styles";
 import { useContext, useEffect, useState } from "react";
 
-import { SocketContext } from '../../services/socket';
-import { Message } from '../../types/Socket';
+import { SocketContext } from "../../services/socket";
+import { Message, RoomClient } from "../../types/Socket";
 
 export default function Lobby() {
   const socket = useContext(SocketContext);
-  
+
   const [room, setRoom] = useState("");
   // const [username, setUsername] = useState("");
   const urlSearch = new URLSearchParams(window.location.search);
-  const username = urlSearch.get("username") as string | '';
+  const username = urlSearch.get("username") as string | "";
 
   const [messagesList, setMessagesList] = useState<Message[]>([]);
+  const [clientsList, setClientsList] = useState<RoomClient[]>([]);
 
   useEffect(() => {
+    socket.on("list_players", (data) => {
+      setClientsList([...clientsList, data]);
+    });
     socket.on("message", (newMessage) => {
       setMessagesList([...messagesList, newMessage]);
     });
-    socket.on("username", (username) => {
-      console.log("user: " + username);
-    });
-  }, [messagesList]);
+  }, [messagesList, clientsList]);
 
   const handleKeyPress = (event: string, text: string) => {
     if (event === "Enter") {
@@ -31,10 +32,10 @@ export default function Lobby() {
       };
 
       socket.emit("message", data);
-      // text = "";
     }
   };
 
+  console.log(clientsList);
   return (
     <>
       <select
@@ -50,7 +51,7 @@ export default function Lobby() {
         <option value="Sala 3">Sala 3</option>
         <option value="Sala 4">Sala 4</option>
       </select>
-      {messagesList?.map((data: any, key) => {
+      {messagesList?.map((data, key) => {
         return (
           <h5 key={key}>
             {data.username}: {data.text}
@@ -63,6 +64,11 @@ export default function Lobby() {
         id="message_input"
         onKeyPress={(event) => handleKeyPress(event.key, event.target.value)}
       />
+      <div>
+        {clientsList?.map((c, key) => {
+          return <div key={key}>{c.username}</div>;
+        })}
+      </div>
     </>
   );
 }

@@ -24,7 +24,7 @@ export interface ServerToClientEvents {
   message: (data: Message) => void;
   alert: (data: boolean) => void;
   username: (data: string) => void;
-  list_players: (data: RoomClient[]) => void;
+  list_players: (data: RoomClient) => void;
   gameMove: (data: GameMove) => void;
 }
 

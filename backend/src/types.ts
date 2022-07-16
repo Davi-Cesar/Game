@@ -1,7 +1,7 @@
 export type CharacterSides = 'down' | 'left' | 'right' | 'up';
 
 export interface RoomClient {
-    client_id: string
+    client_id: string,
     username: string,
     password: string,
     email: string,
@@ -23,8 +23,9 @@ export interface ServerToClientEvents {
     message: (data: Message) => void;
     alert: (data: boolean) => void;
     username: (data: string) => void;
-    list_players: (data: RoomClient[]) => void;
+    list_players: (data: RoomClient) => void;
     gameMove: (data: GameMove) => void;
+    
 }
   
 export interface ClientToServerEvents {
