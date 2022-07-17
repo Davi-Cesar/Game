@@ -69,6 +69,10 @@ io.on('connection', (client) => {
     client.on("hit", data => {
         client.broadcast.emit('hit', data)        
     });
+
+    client.on("opponentLife", data => {
+        client.broadcast.emit('opponentLife', data)        
+    });
 });
 
 

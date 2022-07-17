@@ -7,7 +7,7 @@ import { Character } from '../../components/Character';
 import { Hud } from '../../components/Hud';
 
 import { SocketContext } from '../../services/socket';
-import { canHit, checkItem, Weapons } from '../../utils/general';
+import { canHit, checkWeapon, receiveDamage, WeaponsList } from '../../utils/general';
 
 export const GameMatch = () => {
   const socket = useContext(SocketContext);
@@ -18,14 +18,47 @@ export const GameMatch = () => {
     side: 'down' as CharacterSides,
     x: 3,
     y: 5,
+    life: 1000
   })
 
   const [ player1Hud, setPlayer1Hud ] = useState({
     life: 1000,
     weapon: 'Empty',
-    weaponImage: Weapons[0].image,
+    weaponImage: WeaponsList[0].image,
     damage: 0.5,
   })
+
+  useEffect(() => {
+    socket.on("gameMove", (data) => {
+      // console.log(data);
+
+      setPlayer2(player2 => ({
+        ...player2,
+        name: data.playerId,
+        side: data.side,
+        x: data.xAxis,
+        y: data.yAxis
+      }))
+    });
+
+    socket.on("hit", (data) => {
+      // console.log(data);
+
+      setPlayer1Hud(player1Hud => ({
+        ...player1Hud,
+        life: receiveDamage(player1Hud.life, data.damage)
+      }))
+    });
+
+    socket.on("opponentLife", (data) => {
+      // console.log(data);
+
+      setPlayer2(player2 => ({
+        ...player2,
+        life: data.life
+      }))
+    });
+  }, [socket]);
 
   useEffect(() => {
     socket.emit("gameMove", {
@@ -35,44 +68,36 @@ export const GameMatch = () => {
       yAxis: player1.y,
     });
     
-    const item = checkItem(player1.x, player1.y)
+    const newWeapon = checkWeapon(player1.x, player1.y)
 
-    if (item) {
+    if (newWeapon) {
       // console.log('Changed weapon');
 
-      setPlayer1Hud({
-        life: player1Hud.life,
-        weapon: item.name,
-        weaponImage: item.image,
-        damage: item.damage
-      })
+      setPlayer1Hud(player1Hud => ({
+        ...player1Hud,
+        weapon: newWeapon.name,
+        weaponImage: newWeapon.image,
+        damage: newWeapon.damage
+      }))
     }
     
   }, [player1.x, player1.y])
 
   useEffect(() => {
-    socket.on("gameMove", (data) => {
-      // console.log(data);
-
-      setPlayer2({
-        name: data.playerId,
-        side: data.side,
-        x: data.xAxis,
-        y: data.yAxis,
-      })
+    socket.emit("opponentLife", {
+      life: player1Hud.life
     });
+  }, [player1Hud.life])
 
-    socket.on("hit", (data) => {
-      // console.log(data);
+  const handleMouseClick = () => {
+    if (canHit(player1.x, player1.y, player2.x, player2.y, player1.side)) {
+      // console.log('Hit: ');
 
-      setPlayer1Hud({
-        life: ((player1Hud.life > 0) ? player1Hud.life-=data.damage : player1Hud.life),
-        weapon: player1Hud.weapon,
-        weaponImage: player1Hud.weaponImage,
+      socket.emit("hit", {
         damage: player1Hud.damage
-      })
-    });
-  }, [socket]);
+      });
+    }
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     switch(event.code) {
@@ -95,25 +120,15 @@ export const GameMatch = () => {
     }
   }
 
-  const handleMouseClick = () => {
-    if (canHit(player1.x, player1.y, player2.x, player2.y, player1.side)) {
-      // console.log('Hit: ');
-
-      socket.emit("hit", {
-        damage: player1Hud.damage
-      });
-    }
-  }
-
   return (
     <S.Container tabIndex={0} onKeyDown={handleKeyDown} onClick={handleMouseClick}>
       <S.Map>
         <Character x={player1.x} y={player1.y} side={player1.side} name={player1.name} weapon={player1Hud.weaponImage}/>
         <Character x={player2.x} y={player2.y} side={player2.side} name={player2.name} />
       </S.Map>
-      <Hud life={player1Hud.life} weapon={player1Hud.weapon} strengh={player1Hud.damage}/>
+      <Hud life={player1Hud.life} weapon={player1Hud.weapon} strengh={player1Hud.damage} opponentsLife={player2.life}/>
 
-      {Weapons.map((weapon, index) => (
+      {WeaponsList.map((weapon, index) => (
         <S.Weapon top={weapon.defaultPosition.y} left={weapon.defaultPosition.x} src={weapon.image} key={index} />
       ))}
     </S.Container>

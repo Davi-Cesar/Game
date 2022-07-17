@@ -23,6 +23,10 @@ export interface Hit {
   damage: number
 }
 
+export interface OpponentLife {
+  life: number
+}
+
 export interface ServerToClientEvents {
   // Emit
   message: (data: Message) => void;
@@ -31,6 +35,7 @@ export interface ServerToClientEvents {
   list_players: (data: RoomClient[]) => void;
   gameMove: (data: GameMove) => void;
   hit: (data: Hit) => void;
+  opponentLife: (data: OpponentLife) => void;
 }
 
 export interface ClientToServerEvents {
@@ -41,4 +46,5 @@ export interface ClientToServerEvents {
   list_players: (data: RoomClient) => void;
   gameMove: (data: GameMove) => void;
   hit: (data: Hit) => void;
+  opponentLife: (data: OpponentLife) => void;
 }

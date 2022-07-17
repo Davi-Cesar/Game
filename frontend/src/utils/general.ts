@@ -1,7 +1,7 @@
 import { CharacterSides } from "../types/CharacterSides";
 import { mapSpots } from "./mapSpots";
 
-export const Weapons = [
+export const WeaponsList = [
   {
     name: 'Punch',
     damage: 0.5,
@@ -41,10 +41,6 @@ export const Weapons = [
 ]
 
 export const canHit = (player1X: number, player1Y: number, player2X: number, player2Y: number, player1Side: CharacterSides) => {
-  // console.log('Player1 Side: ' + player1Side);
-  // console.log('Player1 - X: ' + player1X + ' | Y: ' + player1Y);
-  // console.log('Player2 - X: ' + player2X + ' | Y: ' + player2Y);
-
   if (player1X == player2X && (player1Y - player2Y == -1) && (player1Side == 'down')) {
     return true
   }
@@ -64,20 +60,34 @@ export const canHit = (player1X: number, player1Y: number, player2X: number, pla
   return false
 }
 
-export const checkItem = (xAxis: number, yAxis: number) => {
+export const checkWeapon = (xAxis: number, yAxis: number) => {
   if (mapSpots[yAxis][xAxis] === 2) {
-    return Weapons[1]
+    return WeaponsList[1]
   }
 
   if (mapSpots[yAxis][xAxis] === 3) {
-    return Weapons[2]
+    return WeaponsList[2]
   }
 
   if (mapSpots[yAxis][xAxis] === 4) {
-    return Weapons[3]
+    return WeaponsList[3]
   }
 
   return false
+}
+
+export const receiveDamage = (currentLife: number, damage: number) => {
+  if (currentLife > 0) {
+    const newLife = currentLife - damage
+
+    if (newLife < 0) {
+      return 0
+    }
+
+    return newLife
+  }
+
+  return currentLife
 }
 
 // export const receiveDamage = (currentLife: number, currentShield: number, damage: number) => {
