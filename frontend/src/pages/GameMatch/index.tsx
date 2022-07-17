@@ -28,6 +28,13 @@ export const GameMatch = () => {
   })
 
   useEffect(() => {
+    socket.emit("gameMove", {
+      playerId: player1.name,
+      side: player1.side,
+      xAxis: player1.x,
+      yAxis: player1.y,
+    });
+    
     const item = checkItem(player1.x, player1.y)
 
     if (item) {
