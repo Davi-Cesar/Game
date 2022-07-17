@@ -10,9 +10,9 @@ type Props = {
 export const Hud = ({life, weapon, strengh}: Props) => {
     return (
         <S.Container>
-            <S.Label>Life: {life}</S.Label>
-            <S.Label>Weapon: {weapon}</S.Label>
-            <S.Label>Strengh: {strengh}</S.Label>
+            <S.LifeLabel>Life: <span>{life}</span> </S.LifeLabel>
+            <S.WeaponLabel>Weapon: <span>{weapon}</span></S.WeaponLabel>
+            <S.StrenghtLabel>Strengh: <span>{strengh*2}</span></S.StrenghtLabel>
         </S.Container>
     );
 }

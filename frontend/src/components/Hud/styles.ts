@@ -7,6 +7,34 @@ export const Container = styled.div`
     flex-direction: column;
 `;
 
-export const Label = styled.div`
+export const LifeLabel = styled.div`
     margin-top: 1rem;
+
+    span {
+        color: #0db80d;
+        font-weight: 600;
+        font-size: 2rem;
+
+        margin-left: 0.2rem;
+    }
+`;
+
+export const WeaponLabel = styled.div`
+    margin-top: 3rem;
+
+    span {
+        color: gray;
+        font-weight: 500;
+        font-size: 1.4rem;
+    }
+`;
+
+export const StrenghtLabel = styled.div`
+    margin-top: 1rem;
+
+    span {
+        color: orange;
+        font-weight: 500;
+        font-size: 1.2rem;
+    }
 `;

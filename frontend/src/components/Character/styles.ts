@@ -8,6 +8,8 @@ export const Container = styled.div<{ size: number, left: number, top: number, s
     top: ${props => props.top}px;
     background-image: url('/assets/char.png');
     background-position: 0px ${props => props.sidePos}px;
+
+    z-index: 1;
 `;
 
 export const NameBox = styled.div`
