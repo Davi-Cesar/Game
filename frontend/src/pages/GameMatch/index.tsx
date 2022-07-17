@@ -67,13 +67,8 @@ export const GameMatch = () => {
     });
   }, [socket]);
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown); 
-  }, [])
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    switch(e.code) {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    switch(event.code) {
       case 'KeyA':
       case 'ArrowLeft':
         player1.moveLeft();
@@ -104,7 +99,7 @@ export const GameMatch = () => {
   }
 
   return (
-    <S.Container onClick={handleMouseClick}>
+    <S.Container tabIndex={0} onKeyDown={handleKeyDown} onClick={handleMouseClick}>
       <S.Map>
         <Character x={player1.x} y={player1.y} side={player1.side} name={player1.name} weapon={player1Hud.weaponImage}/>
         <Character x={player2.x} y={player2.y} side={player2.side} name={player2.name} />
