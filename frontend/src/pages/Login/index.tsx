@@ -17,18 +17,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   function connectToRoom() {
-    socket.emit(
-      "select_room",
-      {
-        client_id: socket.id,
-        username,
-        email,
-        password,
-      }
-      // (message: string[]) => {
-      //   setMessages(message);
-      // }
-    );
+    socket.emit("select_room", {
+      client_id: socket.id,
+      username,
+      email,
+      password,
+    });
 
     navigate("/lobby?username=" + username);
   }

@@ -1,8 +1,8 @@
 import * as S from "./styles";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 
 import { SocketContext } from "../../services/socket";
-import { Message, RoomClient } from "../../types/Socket";
+import { Message } from "../../types/Socket";
 
 export default function Lobby() {
   const socket = useContext(SocketContext);
@@ -11,18 +11,32 @@ export default function Lobby() {
   // const [username, setUsername] = useState("");
   const urlSearch = new URLSearchParams(window.location.search);
   const username = urlSearch.get("username") as string | "";
-
+  const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState<Message[]>([]);
-  const [clientsList, setClientsList] = useState<RoomClient[]>([]);
+  const [clientsList, setClientsList] = useState<string[]>([]);
+
+  useEffect(() => {
+    socket.emit("list_players", (response) => {
+      console.log(response);
+      setClientsList(response);
+    });
+  }, []);
 
   useEffect(() => {
     socket.on("list_players", (data) => {
-      setClientsList([...clientsList, data]);
+      if (data.add) {
+        setClientsList([...clientsList, data.username]);
+      } else {
+        const updatedClientsList = clientsList.filter(
+          (client) => client !== data.username
+        );
+        setClientsList(updatedClientsList);
+      }
     });
     socket.on("message", (newMessage) => {
       setMessagesList([...messagesList, newMessage]);
     });
-  }, [messagesList, clientsList]);
+  }, [messagesList, clientsList, socket]);
 
   const handleKeyPress = (event: string, text: string) => {
     if (event === "Enter") {
@@ -32,10 +46,15 @@ export default function Lobby() {
       };
 
       socket.emit("message", data);
+      setMessage("");
     }
   };
 
-  console.log(clientsList);
+  const handleMessageInput = (event: ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+  };
+
+  //console.log(clientsList);
   return (
     <>
       <select
@@ -62,13 +81,14 @@ export default function Lobby() {
         type="text"
         placeholder="Digite sua mensagem"
         id="message_input"
+        value={message}
+        onChange={handleMessageInput}
         onKeyPress={(event) => handleKeyPress(event.key, event.target.value)}
       />
-      <div>
-        {clientsList?.map((c, key) => {
-          return <div key={key}>{c.username}</div>;
-        })}
-      </div>
+
+      {clientsList.map((username, key) => (
+        <div key={key}>{username}</div>
+      ))}
     </>
   );
 }

@@ -8,7 +8,14 @@ export interface RoomClient {
 }
 
 export interface Message {
+  [x: string]: any;
+  //[x: string]?: any;
   text: string,
+  username: string,
+}
+
+export interface Player {
+  add: boolean,
   username: string,
 }
 
@@ -20,19 +27,19 @@ export interface GameMove {
 }
 
 export interface ServerToClientEvents {
-  // Emit
+  // On
   message: (data: Message) => void;
   alert: (data: boolean) => void;
   username: (data: string) => void;
-  list_players: (data: RoomClient) => void;
+  list_players: (data: Player) => void;
   gameMove: (data: GameMove) => void;
 }
 
 export interface ClientToServerEvents {
-  // On
+  // Emit
   hello: () => void;
   message: (data: Message) => void;
   select_room: (data: RoomClient) => void;
-  list_players: (data: RoomClient) => void;
+  list_players: ( callback: (e: string[]) => void) => void;
   gameMove: (data: GameMove) => void;
 }

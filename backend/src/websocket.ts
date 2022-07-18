@@ -11,7 +11,18 @@ io.on('connection', (client) => {
     console.log("Client connection " + client.id);
     
     client.on("disconnect", () => {
-        clients.find((user: { client_id: string; }) => user.client_id === client.id ? console.log("Client desconnected " + `${client.id}`) : "");
+        const clientFound = clients.find((user) => 
+                user.client_id === client.id
+        );
+        if(clientFound !== undefined){
+            console.log("Client desconnected " + `${client.id}`);
+            client.broadcast.emit("list_players", {
+                add: false,
+                username: clientFound.username
+            });
+        } else {
+            console.log("Client: " + `${client.id}` + ", was not found!");
+        }
     });
 
     client.on("select_room", (data, callback) => {
@@ -33,13 +44,23 @@ io.on('connection', (client) => {
             password: client.id,
         }));
         usernames.push(data.username)
-        console.log(io.allSockets())
-        
-        io.emit("list_players", data)
-        // const messagesRoom = getMessagesRoom(data.room);
-        // callback(messagesRoom);
+        //console.log(io.allSockets())
+        //client.broadcast.emit("list_players", data)
+        const clientsAll = getClients();
+        const messagesAll = getMessagesRoom();
+        //callback(messagesAll);
+        client.broadcast.emit("list_players",
+            {
+                add: true,
+                username: data.username
+            });
     });
     
+    client.on("list_players", (callback) => {
+        const clientsAll = getClients();
+        callback(clientsAll);
+    })
+
     client.on("message", data => {
         const message: Message = {
             username: data.username,
@@ -57,8 +78,13 @@ io.on('connection', (client) => {
     
 });
 
-// function getMessagesRoom(room: string) {
-//     const messagesRoom = messages.filter(message => message.room === room);
+function getMessagesRoom() {
+    const messagesRoom = messages.filter(message => message.text);
 
-//     return messagesRoom;
-// }
+    return messagesRoom;
+}
+function getClients() {
+    const users = usernames.filter(() => usernames);
+
+    return users;
+}

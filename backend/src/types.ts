@@ -12,6 +12,11 @@ export interface Message {
     username: string,
 }
 
+export interface Player {
+    add: boolean,
+    username: string,
+}
+
 export interface GameMove {
     player: string,
     xAxis: number,
@@ -23,7 +28,7 @@ export interface ServerToClientEvents {
     message: (data: Message) => void;
     alert: (data: boolean) => void;
     username: (data: string) => void;
-    list_players: (data: RoomClient) => void;
+    list_players: (data: Player) => void;
     gameMove: (data: GameMove) => void;
     
 }
@@ -32,8 +37,8 @@ export interface ClientToServerEvents {
     // On
     hello: () => void;
     message: (data: Message) => void;
-    select_room: (data: RoomClient, callback: (e: Message[]) => void) => void;
-    list_players: (data: RoomClient) => void;
+    select_room: (data: RoomClient, callback: (e: string[]) => string) => void;
+    list_players: ( callback: (e: string[]) => string) => void;
     gameMove: (data: GameMove) => void;
 }
   
