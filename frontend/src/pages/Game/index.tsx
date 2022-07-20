@@ -4,7 +4,7 @@ import { SocketContext } from "../../services/socket";
 
 export default function Lobby() {
   const socket = useContext(SocketContext);
-  const [room, setRoom] = useState("");
+  const [room, setRoom] = useState(0);
 
   useEffect(() => {
     socket.on("join_room", (data) => {
@@ -15,7 +15,7 @@ export default function Lobby() {
   //console.log(clientsList);
   return (
     <>
-      <h2>{room}</h2>
+      <h2>Sala {room}</h2>
     </>
   );
 }

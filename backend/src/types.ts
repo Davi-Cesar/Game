@@ -7,9 +7,15 @@ export interface RoomClient {
     email: string,
 }
 
+export interface Rooms {
+    status: string;
+    players: string[];
+    roomId: number;
+}
+
 export interface JoinRoom {
     username: string,
-    room: string
+    room: number
 }  
 
 export interface Message {
@@ -35,6 +41,8 @@ export interface ServerToClientEvents {
     list_players: (data: Player) => void;
     gameMove: (data: GameMove) => void;
     join_room: (data: JoinRoom) => void;
+    status_room: (data: string) => void;
+    list_rooms: (data: Rooms[]) => void;
     room: (data: string) => void;
 }
 

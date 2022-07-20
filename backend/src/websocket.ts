@@ -1,14 +1,20 @@
 import { io } from './https';
-import { JoinRoom, Message, RoomClient } from './types';
+import { JoinRoom, Message, RoomClient, Rooms } from './types';
 
 
 const clients: RoomClient[] = []
 const usernames: string[] = []
 const messages: Message[] = []
+const rooms: Rooms[] = []
 
 
+for (var i = 0; i < 5; i++) {
+    rooms.push({ status: "empty", players: [], roomId: i + 1 });
+}
 io.on('connection', (client) => {
     console.log("Client connection " + client.id);
+    
+    io.emit("list_rooms", rooms);
     
     client.on("disconnect", () => {
         const clientFound = clients.find((user) => 
@@ -25,13 +31,12 @@ io.on('connection', (client) => {
         }
     });
 
-    client.on("select_room", (data, callback) => {
-        
+    client.on("select_room", (data) => { 
         // console.log("User: " + data.username +" join " + data.room)
         // Verificar se o usuario ja esta na sala
         
         const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.client_id === data.client_id);
-      
+        io.emit("status_room", "empty")
         
         userInRoom ? (userInRoom.client_id = client.id)
         : 
@@ -42,11 +47,7 @@ io.on('connection', (client) => {
             password: client.id,
         }));
         usernames.push(data.username)
-        //console.log(io.allSockets())
-        //client.broadcast.emit("list_players", data)
-        const clientsAll = getClients();
-        const messagesAll = getMessagesRoom();
-        //callback(messagesAll);
+   
         client.broadcast.emit("list_players",
             {
                 add: true,
@@ -61,12 +62,14 @@ io.on('connection', (client) => {
     
     
     client.on("join_room", (data) => {
-        const room: JoinRoom = {
+        let nameRoom = data.room + "";
+        client.join(nameRoom);
+        const join: JoinRoom = {
             username: data.username,
             room: data.room
         }
-        client.join(data.room);
-        io.to(data.room).emit("join_room", room);
+        io.to(nameRoom).emit("join_room", join);
+        joinRoom(data.username, data.room)
     })
     
     client.on("message", data => {
@@ -91,8 +94,21 @@ function getMessagesRoom() {
 
     return messagesRoom;
 }
+
 function getClients() {
     const users = usernames.filter(() => usernames);
 
     return users;
+}
+
+function joinRoom(player: string, roomId: number) {
+    rooms.forEach((room) => {
+        if(room.roomId === roomId && room.players.length <= 1) {
+            room.players.push(player);
+            room.status = "waiting"
+        } if (room.roomId === roomId && room.players.length === 2) {
+            room.players.push(player);
+            room.status = "starting"
+        } 
+    });
 }
