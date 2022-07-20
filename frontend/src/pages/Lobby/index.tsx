@@ -3,9 +3,11 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 
 import { SocketContext } from "../../services/socket";
 import { Message } from "../../types/Socket";
+import { useNavigate } from "react-router-dom";
 
 export default function Lobby() {
   const socket = useContext(SocketContext);
+  let navigate = useNavigate();
 
   const [room, setRoom] = useState("");
   // const [username, setUsername] = useState("");
@@ -50,6 +52,15 @@ export default function Lobby() {
     }
   };
 
+  function joinRoom() {
+    socket.emit("join_room", {
+      room,
+      username,
+    });
+
+    navigate("/game");
+  }
+
   const handleMessageInput = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
@@ -64,7 +75,7 @@ export default function Lobby() {
           setRoom(event.target.value);
         }}
       >
-        <option value="-1">Selecione a sala</option>
+        <option value="Selecione a sala">Selecione a sala</option>
         <option value="Sala 1">Sala 1</option>
         <option value="Sala 2">Sala 2</option>
         <option value="Sala 3">Sala 3</option>
@@ -85,7 +96,7 @@ export default function Lobby() {
         onChange={handleMessageInput}
         onKeyPress={(event) => handleKeyPress(event.key, event.target.value)}
       />
-
+      <button onClick={() => joinRoom()}>Entrar</button>
       {clientsList.map((username, key) => (
         <div key={key}>{username}</div>
       ))}

@@ -1,22 +1,28 @@
-import io, { Socket } from "socket.io-client";
-import { useContext, useEffect, useState } from "react";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { useContext, useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import * as S from "./styles";
 
 import { SocketContext } from "../../services/socket";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { app } from "../../services/firebase-config";
 
 export default function Login() {
   const socket = useContext(SocketContext);
-
+  const auth = getAuth(app);
   let navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function connectToRoom() {
+  function connect() {
     socket.emit("select_room", {
       client_id: socket.id,
       username,
@@ -26,6 +32,28 @@ export default function Login() {
 
     navigate("/lobby?username=" + username);
   }
+
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const login = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+  };
 
   return (
     <>
@@ -56,8 +84,15 @@ export default function Login() {
         />
 
         {/* <Link to="/lobby"> */}
-        <button type="submit" onClick={() => connectToRoom()}>
-          Entrar na Sala
+        <button
+          type="submit"
+          onClick={() => {
+            connect();
+            // register();
+            // login();
+          }}
+        >
+          Entrar
         </button>
         {/* </Link> */}
       </form>

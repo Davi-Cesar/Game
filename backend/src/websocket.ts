@@ -1,5 +1,5 @@
 import { io } from './https';
-import { Message, RoomClient } from './types';
+import { JoinRoom, Message, RoomClient } from './types';
 
 
 const clients: RoomClient[] = []
@@ -26,14 +26,12 @@ io.on('connection', (client) => {
     });
 
     client.on("select_room", (data, callback) => {
-        // client.join(data.room);
+        
         // console.log("User: " + data.username +" join " + data.room)
         // Verificar se o usuario ja esta na sala
-        let alert: boolean = false;
         
         const userInRoom: boolean | any = clients.find(user => user.username === data.username && user.client_id === data.client_id);
-        const username: any = clients.find(user => user.username === data.username ? client.emit('alert', alert = true ) : client.emit('alert', alert));
-        const useremail: any = clients.find(user => user.email === data.email ? client.emit('alert', alert = true ) : client.emit('alert', alert));
+      
         
         userInRoom ? (userInRoom.client_id = client.id)
         : 
@@ -60,7 +58,17 @@ io.on('connection', (client) => {
         const clientsAll = getClients();
         callback(clientsAll);
     })
-
+    
+    
+    client.on("join_room", (data) => {
+        const room: JoinRoom = {
+            username: data.username,
+            room: data.room
+        }
+        client.join(data.room);
+        io.to(data.room).emit("join_room", room);
+    })
+    
     client.on("message", data => {
         const message: Message = {
             username: data.username,
