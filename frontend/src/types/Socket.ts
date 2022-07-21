@@ -46,6 +46,7 @@ export interface ServerToClientEvents {
   status_room: (data: string) => void;
   list_rooms: (data: Rooms[]) => void;
   gameMove: (data: GameMove) => void;
+  auth: (data: string) => void;
 }
 
 export interface ClientToServerEvents {

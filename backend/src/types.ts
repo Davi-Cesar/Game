@@ -43,6 +43,7 @@ export interface ServerToClientEvents {
     join_room: (data: JoinRoom) => void;
     status_room: (data: string) => void;
     list_rooms: (data: Rooms[]) => void;
+    auth: (data: string) => void;
     room: (data: string) => void;
 }
 
@@ -52,6 +53,7 @@ export interface ClientToServerEvents {
     message: (data: Message) => void;
     select_room: (data: RoomClient, callback: (e: string[]) => string) => void;
     join_room: (data: JoinRoom) => void;
+    list_rooms: (data: Rooms[], callback: (e: Rooms) => Rooms) => void;
     list_players: ( callback: (e: string[]) => string) => void;
     gameMove: (data: GameMove) => void;
 }

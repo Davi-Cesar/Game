@@ -14,7 +14,6 @@ export default function Lobby() {
   const urlSearch = new URLSearchParams(window.location.search);
   const username = urlSearch.get("username") as string | "";
 
-  const [status, setStatus] = useState("");
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState<Message[]>([]);
   const [roomList, setRoomList] = useState<Rooms[]>();
@@ -29,10 +28,6 @@ export default function Lobby() {
   useEffect(() => {
     socket.on("list_rooms", (data) => {
       setRoomList(data);
-    });
-
-    socket.on("status_room", (data) => {
-      setStatus(data);
     });
 
     socket.on("list_players", (data) => {
@@ -76,48 +71,65 @@ export default function Lobby() {
     setMessage(event.target.value);
   };
 
+  const style = {
+    cursor: "not-allowed",
+  };
+
   return (
     <>
-      <select
-        name="select_room"
-        id="select_room"
-        onChange={(event) => {
-          setRoom(+event.target.value);
-        }}
-      >
-        <option value="Selecione a sala">Selecione a sala</option>
+      <S.Container>
+        <select
+          name="select_room"
+          id="select_room"
+          size={5}
+          onChange={(event) => {
+            setRoom(+event.target.value);
+          }}
+        >
+          <option value="Selecione a sala">Selecione a sala</option>
 
-        {roomList?.map((data, key) =>
-          data.status === "starting" ? (
-            <option key={key} value={data.roomId} disabled>
-              Sala {data.roomId} {data.status}
-            </option>
-          ) : (
-            <option key={key} value={data.roomId}>
-              Sala {data.roomId} {data.status}
-            </option>
-          )
-        )}
-      </select>
-      {messagesList?.map((data, key) => {
-        return (
-          <h5 key={key}>
-            {data.username}: {data.text}
-          </h5>
-        );
-      })}
-      <input
-        type="text"
-        placeholder="Digite sua mensagem"
-        id="message_input"
-        value={message}
-        onChange={handleMessageInput}
-        onKeyPress={(event) => handleKeyPress(event.key, event.target.value)}
-      />
-      <button onClick={() => joinRoom()}>Entrar na sala</button>
-      {clientsList.map((username, key) => (
-        <div key={key}>{username}</div>
-      ))}
+          {roomList?.map((data, key) =>
+            data.status === "starting" ? (
+              <option key={key} value={data.roomId} disabled style={style}>
+                Sala {data.roomId} ({data.status})
+              </option>
+            ) : (
+              <option key={key} value={data.roomId}>
+                Sala {data.roomId} ({data.status})
+              </option>
+            )
+          )}
+        </select>
+        <button onClick={() => joinRoom()}>Entrar na sala</button>
+        <S.Content>
+          <S.Chat>
+            {messagesList?.map((data, key) => {
+              return (
+                <h5 key={key}>
+                  {data.username}: {data.text}
+                </h5>
+              );
+            })}
+            <input
+              placeholder="Digite sua mensagem"
+              id="message_input"
+              value={message}
+              onChange={handleMessageInput}
+              onKeyPress={(event) =>
+                handleKeyPress(event.key, event.target.value)
+              }
+            />
+          </S.Chat>
+          <S.Users>
+            {clientsList.map((username, key) => (
+              <div>
+                <S.Ball />
+                <p key={key}>{username}</p>
+              </div>
+            ))}
+          </S.Users>
+        </S.Content>
+      </S.Container>
     </>
   );
 }

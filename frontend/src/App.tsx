@@ -3,12 +3,8 @@ import { GameMatch } from "./pages/GameMatch";
 import Lobby from "./pages/Lobby";
 import Login from "./pages/Login";
 import Game from "./pages/Game";
-import { useContext } from "react";
-import { SocketContext } from "./services/socket";
 
 const App = () => {
-  const socket = useContext(SocketContext);
-
   return (
     <>
       <BrowserRouter>
