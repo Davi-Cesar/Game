@@ -36,7 +36,11 @@ export default function Lobby() {
           const result = room.players.find(player => player.client_id === socket.id)
           
           if (result !== undefined) {
-            navigate("/game-match?room=" + room.roomId + '&username=' + username);
+            const opponent = room.players.find(player => player.client_id !== socket.id);
+
+            if (opponent !== undefined) {
+              navigate("/game-match?room=" + room.roomId + '&username=' + username + '&opponentId=' + opponent.client_id);
+            }
           }
         }
       })

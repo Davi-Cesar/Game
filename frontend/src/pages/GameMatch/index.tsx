@@ -12,7 +12,11 @@ import { canHit, checkWeapon, receiveDamage, WeaponsList } from '../../utils/gen
 export const GameMatch = () => {
   const socket = useContext(SocketContext);
 
-  const player1 = useCharacter(socket.id, 3, 5);
+  const urlSearch = new URLSearchParams(window.location.search);
+  const username = urlSearch.get("username") as string | "";
+  const opponentId = urlSearch.get("opponentId") as string | "";
+
+  const player1 = useCharacter(username, 3, 5);
   const [ player2, setPlayer2 ] = useState({
     name: '',
     side: 'down' as CharacterSides,
@@ -66,6 +70,7 @@ export const GameMatch = () => {
       side: player1.side,
       xAxis: player1.x,
       yAxis: player1.y,
+      opponentId: opponentId
     });
     
     const newWeapon = checkWeapon(player1.x, player1.y)
@@ -85,7 +90,8 @@ export const GameMatch = () => {
 
   useEffect(() => {
     socket.emit("opponentLife", {
-      life: player1Hud.life
+      life: player1Hud.life,
+      opponentId: opponentId
     });
   }, [player1Hud.life])
 
@@ -94,7 +100,8 @@ export const GameMatch = () => {
       // console.log('Hit: ');
 
       socket.emit("hit", {
-        damage: player1Hud.damage
+        damage: player1Hud.damage,
+        opponentId: opponentId
       });
     }
   }

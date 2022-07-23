@@ -39,15 +39,18 @@ export interface GameMove {
   playerId: string,
   side: CharacterSides,
   xAxis: number,
-  yAxis: number
+  yAxis: number,
+  opponentId: string
 }
 
 export interface Hit {
-  damage: number
+  damage: number,
+  opponentId: string
 }
 
 export interface OpponentLife {
-  life: number
+  life: number,
+  opponentId: string
 }
 
 export interface ServerToClientEvents {

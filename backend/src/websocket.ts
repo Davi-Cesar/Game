@@ -116,15 +116,15 @@ io.on('connection', (client) => {
     });
     
     client.on("gameMove", data => {
-        client.broadcast.emit('gameMove', data)        
+        client.to(data.opponentId).emit('gameMove', data)    
     });
 
     client.on("hit", data => {
-        client.broadcast.emit('hit', data)        
+        client.to(data.opponentId).emit('hit', data)        
     });
 
     client.on("opponentLife", data => {
-        client.broadcast.emit('opponentLife', data)        
+        client.to(data.opponentId).emit('opponentLife', data)        
     });
 });
 
