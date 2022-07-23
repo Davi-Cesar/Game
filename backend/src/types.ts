@@ -7,13 +7,19 @@ export interface RoomClient {
     email: string,
 }
 
+export interface PlayerInfo {
+    client_id: string,
+    username: string,
+}
+
 export interface Rooms {
     status: string;
-    players: string[];
+    players: PlayerInfo[];
     roomId: number;
 }
 
 export interface JoinRoom {
+    client_id: string,
     username: string,
     room: number
 }  
@@ -53,7 +59,7 @@ export interface ClientToServerEvents {
     message: (data: Message) => void;
     select_room: (data: RoomClient, callback: (e: string[]) => string) => void;
     join_room: (data: JoinRoom) => void;
-    list_rooms: (data: Rooms[], callback: (e: Rooms) => Rooms) => void;
+    list_rooms: (callback: (e: Rooms[]) => Rooms[]) => void;
     list_players: ( callback: (e: string[]) => string) => void;
     gameMove: (data: GameMove) => void;
 }

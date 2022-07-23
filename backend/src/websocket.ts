@@ -1,5 +1,5 @@
 import { io } from './https';
-import { JoinRoom, Message, RoomClient, Rooms } from './types';
+import { JoinRoom, Message, PlayerInfo, RoomClient, Rooms } from './types';
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -25,7 +25,7 @@ for (var i = 0; i < 5; i++) {
 
 io.on('connection', (client) => {
     console.log("Client connection " + client.id);
-    io.emit("list_rooms", rooms);
+    // io.emit("list_rooms", rooms);
     
     client.on("disconnect", () => {
         const clientFound = clients.find((user) => 
@@ -84,16 +84,22 @@ io.on('connection', (client) => {
         const clientsAll = getClients();
         callback(clientsAll);
     })
+
+    client.on("list_rooms", (callback) => {
+        const roomsList = getRooms();
+        callback(roomsList);
+    })
     
     client.on("join_room", (data) => {
         let nameRoom = data.room + "";
         client.join(nameRoom);
         const join: JoinRoom = {
+            client_id: data.client_id,
             username: data.username,
             room: data.room
         }
         io.to(nameRoom).emit("join_room", join);
-        joinRoom(data.username, data.room)
+        joinRoom(data, data.room)
     })
     
     client.on("message", data => {
@@ -103,7 +109,9 @@ io.on('connection', (client) => {
         }
         
         messages.push(message)
-        console.log(message)
+
+        // console.log(message)
+        
         io.emit("message", message); 
     });
     
@@ -130,14 +138,18 @@ function getRooms() {
     return rooms;
 }
 
-function joinRoom(player: string, roomId: number) {
+function joinRoom(player: PlayerInfo, roomId: number) {
     rooms.forEach((room) => {
         if(room.roomId === roomId && room.players.length <= 1) {
             room.players.push(player);
             room.status = "waiting"
+            io.emit("list_rooms", rooms);
         } if (room.roomId === roomId && room.players.length === 2) {
             room.players.push(player);
             room.status = "starting"
+            io.emit("list_rooms", rooms);
         } 
+
+        console.log(room);
     });
 }

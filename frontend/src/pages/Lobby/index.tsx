@@ -23,10 +23,24 @@ export default function Lobby() {
     socket.emit("list_players", (response) => {
       setClientsList(response);
     });
+
+    socket.emit("list_rooms", (response) => {
+      setRoomList(response);
+    });
   }, []);
 
   useEffect(() => {
     socket.on("list_rooms", (data) => {
+      data.map(room => {
+        if ((room.status === 'waiting') && (room.players.length >= 2)) {
+          const result = room.players.find(player => player.client_id === socket.id)
+          
+          if (result !== undefined) {
+            navigate("/game-match?room=" + room.roomId + '&username=' + username);
+          }
+        }
+      })
+
       setRoomList(data);
     });
 
@@ -60,11 +74,10 @@ export default function Lobby() {
 
   function joinRoom() {
     socket.emit("join_room", {
-      room,
+      client_id: socket.id,
       username,
+      room,
     });
-
-    navigate("/game?room:" + room);
   }
 
   const handleMessageInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +91,8 @@ export default function Lobby() {
   return (
     <>
       <S.Container>
+        <br/>
+        <div>Selecione a sala</div>
         <select
           name="select_room"
           id="select_room"
@@ -86,8 +101,6 @@ export default function Lobby() {
             setRoom(+event.target.value);
           }}
         >
-          <option value="Selecione a sala">Selecione a sala</option>
-
           {roomList?.map((data, key) =>
             data.status === "starting" ? (
               <option key={key} value={data.roomId} disabled style={style}>
