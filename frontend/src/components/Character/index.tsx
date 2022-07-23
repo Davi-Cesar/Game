@@ -6,9 +6,10 @@ type Props = {
     y: number;
     side: CharacterSides;
     name: string;
+    weapon?: string
 }
 
-export const Character = ({x, y, side, name}: Props) => {
+export const Character = ({x, y, side, name, weapon}: Props) => {
     const size = 30;
     const sides = {
         down: 0,
@@ -25,6 +26,7 @@ export const Character = ({x, y, side, name}: Props) => {
             sidePos={sides[side] ?? 0}
         >
             <C.NameBox>{name}</C.NameBox>
+            {weapon && <C.WeaponIcon src={weapon} />}
         </C.Container>
     );
 }

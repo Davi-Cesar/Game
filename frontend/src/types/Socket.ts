@@ -42,6 +42,14 @@ export interface GameMove {
   yAxis: number
 }
 
+export interface Hit {
+  damage: number
+}
+
+export interface OpponentLife {
+  life: number
+}
+
 export interface ServerToClientEvents {
   // On
   message: (data: Message) => void;
@@ -53,6 +61,8 @@ export interface ServerToClientEvents {
   list_rooms: (data: Rooms[]) => void;
   gameMove: (data: GameMove) => void;
   auth: (data: string) => void;
+  hit: (data: Hit) => void;
+  opponentLife: (data: OpponentLife) => void;
 }
 
 export interface ClientToServerEvents {
@@ -64,4 +74,6 @@ export interface ClientToServerEvents {
   list_players: (callback: (e: string[]) => void) => void;
   list_rooms: (callback: (e: Rooms[]) => void) => void;
   gameMove: (data: GameMove) => void;
+  hit: (data: Hit) => void;
+  opponentLife: (data: OpponentLife) => void;
 }

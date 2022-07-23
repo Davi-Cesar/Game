@@ -35,9 +35,18 @@ export interface Player {
 }
 
 export interface GameMove {
-    player: string,
+    playerId: string,
+    side: CharacterSides,
     xAxis: number,
     yAxis: number
+}
+
+export interface Hit {
+    damage: number
+}
+
+export interface OpponentLife {
+    life: number
 }
 
 export interface ServerToClientEvents {
@@ -51,6 +60,8 @@ export interface ServerToClientEvents {
     list_rooms: (data: Rooms[]) => void;
     auth: (data: string) => void;
     room: (data: string) => void;
+    hit: (data: Hit) => void;
+    opponentLife: (data: OpponentLife) => void;
 }
 
 export interface ClientToServerEvents {
@@ -62,6 +73,8 @@ export interface ClientToServerEvents {
     list_rooms: (callback: (e: Rooms[]) => Rooms[]) => void;
     list_players: ( callback: (e: string[]) => string) => void;
     gameMove: (data: GameMove) => void;
+    hit: (data: Hit) => void;
+    opponentLife: (data: OpponentLife) => void;
 }
   
 export interface InterServerEvents {
