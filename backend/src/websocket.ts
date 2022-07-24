@@ -1,5 +1,5 @@
 import { io } from './https';
-import { JoinRoom, Message, PlayerInfo, RoomClient, Rooms } from './types';
+import { EndGame, GameMove, JoinRoom, Message, PlayerInfo, RoomClient, Rooms } from './types';
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -126,6 +126,13 @@ io.on('connection', (client) => {
     client.on("opponentLife", data => {
         client.to(data.opponentId).emit('opponentLife', data)        
     });
+    
+    client.on("endGame", data => { 
+        client.to(""+data.roomId).emit('endGame', data) 
+        clearRoom(data.roomId);  
+        console.log(data); 
+    });
+
 });
 
 function getMessagesRoom() {
@@ -141,7 +148,6 @@ function getClients() {
 }
 
 function getRooms() {
-
     return rooms;
 }
 
@@ -156,7 +162,16 @@ function joinRoom(player: PlayerInfo, roomId: number) {
             room.status = "starting"
             io.emit("list_rooms", rooms);
         } 
-
-        console.log(room);
+        //console.log(room);
+    });
+}
+function clearRoom(roomId: number) {
+    rooms.forEach((room) => {
+        if(room.roomId == roomId){
+            room.players = [];
+            room.status = "empty";
+            io.emit("list_rooms", rooms); 
+            console.log("Entrei na sala");
+        }
     });
 }

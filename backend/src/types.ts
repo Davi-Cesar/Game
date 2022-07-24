@@ -52,6 +52,12 @@ export interface OpponentLife {
     opponentId: string
 }
 
+export interface EndGame {
+    winner: string,
+    opponentId: string,
+    roomId: number,
+}
+
 export interface ServerToClientEvents {
     // Emit
     message: (data: Message) => void;
@@ -65,6 +71,7 @@ export interface ServerToClientEvents {
     room: (data: string) => void;
     hit: (data: Hit) => void;
     opponentLife: (data: OpponentLife) => void;
+    endGame: (data: EndGame) => void;
 }
 
 export interface ClientToServerEvents {
@@ -78,6 +85,7 @@ export interface ClientToServerEvents {
     gameMove: (data: GameMove) => void;
     hit: (data: Hit) => void;
     opponentLife: (data: OpponentLife) => void;
+    endGame: (data: EndGame) => void;
 }
   
 export interface InterServerEvents {
