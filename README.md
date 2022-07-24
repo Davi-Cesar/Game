@@ -27,8 +27,7 @@ Link do vídeo do projeto: https://drive.google.com/file/d/1WrtltPm5Kx8zanC-FdlW
 2. Registre o App para Web.
 3. Adicione um nome ao projeto.
 4. Instale as dependências do Firebase
-
-    '''sh
+    ```sh
     npm install firebase
-    '''
+    ```
 5. Após o processo acima, basta utilizar o SDK gerado pelo Firebase.
