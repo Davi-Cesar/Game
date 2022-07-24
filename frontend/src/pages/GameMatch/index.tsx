@@ -29,11 +29,11 @@ export const GameMatch = () => {
     side: "down" as CharacterSides,
     x: 3,
     y: 5,
-    life: 5,
+    life: 1000,
   });
 
   const [player1Hud, setPlayer1Hud] = useState({
-    life: 5,
+    life: 1000,
     weapon: "Empty",
     weaponImage: WeaponsList[0].image,
     damage: 0.5,

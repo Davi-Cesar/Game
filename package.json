@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "install": "npm-run-all -p install:*",
+    "install:front": "cd frontend && npm install",
+    "install:back": "cd backend && npm install",
+    "start": "npm-run-all -p start:*",
+    "start:front": "cd frontend && npm run start",
+    "start:back": "cd backend && npm run dev"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
